@@ -1,0 +1,78 @@
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:clickable="true"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <!-- Hospital Image Slider -->
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPagerImages"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:orientation="horizontal"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Hospital Name -->
+        <TextView
+            android:id="@+id/textHospitalName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/viewPagerImages"
+            android:fontFamily="@font/roboto"
+            android:paddingTop="8dp"
+            android:text="Hospital Name"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <!-- Hospital Address -->
+        <TextView
+            android:id="@+id/textHospitalAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textHospitalName"
+            android:fontFamily="@font/roboto"
+            android:text="MG Road, Delhi"
+            android:textColor="#555555"
+            android:textSize="14sp"
+            android:paddingTop="2dp" />
+
+        <!-- Rating and Reviews -->
+
+        <TextView
+            android:id="@+id/textHospitalRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textHospitalAddress"
+            android:text="★ 4.5 (250 reviews)"
+            android:fontFamily="@font/roboto"
+            android:textColor="#FFA000"
+            android:textSize="14sp"
+            android:paddingTop="2dp" />
+
+        <!-- Distance -->
+        <TextView
+            android:id="@+id/textHospitalDistance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textHospitalRating"
+            android:text="3 km away"
+            android:fontFamily="@font/roboto"
+            android:textColor="#666666"
+            android:textSize="13sp"
+            android:paddingTop="2dp"
+            android:paddingBottom="8dp" />
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

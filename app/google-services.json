@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "191522860854",
+    "project_id": "bookmydoc-360",
+    "storage_bucket": "bookmydoc-360.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:191522860854:android:ab3b08ff4012e90832cd97",
+        "android_client_info": {
+          "package_name": "com.example.bookmydoc_doctors"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQPmrnP9E1rTc2KNpGPBhJzI-0HND5uxs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:191522860854:android:bff6029e0cc59e7e32cd97",
+        "android_client_info": {
+          "package_name": "in.com.bookmydoc"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQPmrnP9E1rTc2KNpGPBhJzI-0HND5uxs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

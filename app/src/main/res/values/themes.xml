@@ -1,0 +1,43 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme -->
+    <style name="Base.Theme.BookMyDOC" parent="Theme.Material3.Light.NoActionBar">
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textColor">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primaryDark</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="appBarLayoutStyle">@color/primaryDark</item>
+        <item name="windowActionBar">true</item>
+        <item name="android:windowActionBar">true</item>
+    </style>
+
+    <!-- ✅ Splash screen theme for Android 12+ -->
+    <style name="Theme.MyApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Normal theme -->
+    </style>
+    <style name="Theme.BookMyDoc.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="windowSplashScreenBackground">?attr/colorPrimary</item>
+        <item name="postSplashScreenTheme">@style/Theme.BookMyDoc.Main</item>
+    </style>
+
+    <!-- ✅ Normal app theme after splash -->
+    <style name="Theme.BookMyDoc.Main" parent="Base.Theme.BookMyDOC" />
+
+    <!-- ✅ Default app theme (for backward compatibility / pre-Android 12) -->
+    <style name="Theme.BookMyDOC" parent="Base.Theme.BookMyDOC" />
+
+    <!-- Otp Box Style -->
+    <style name="OtpBoxStyle">
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">56dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:background">@drawable/rounded_edittext</item>
+        <item name="android:gravity">center</item>
+        <item name="android:inputType">number</item>
+        <item name="android:maxLength">1</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+</resources>

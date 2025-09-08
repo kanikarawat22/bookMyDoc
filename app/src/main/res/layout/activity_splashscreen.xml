@@ -1,0 +1,25 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_gradient">
+
+    <ImageView
+        android:id="@+id/logoImage"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:src="@drawable/ic_plus_sthes"
+        android:layout_centerInParent="true"
+        android:contentDescription="Logo" />
+
+    <TextView
+        android:id="@+id/quoteText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your health, our priority."
+        android:textColor="#021056"
+        android:textSize="18sp"
+        android:layout_marginBottom="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:fontFamily="sans-serif-medium"/>
+</RelativeLayout>

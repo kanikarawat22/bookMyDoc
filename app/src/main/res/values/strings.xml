@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">BookMyDOC</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="user_greeting">Hi, Vishwaa</string>
+    <string name="user_location">Tiruvannamalai</string>
+
+    <string name="search_hint">Search doctors, clinics, etc.</string>
+
+    <string name="call_hospital">Call Hospital</string>
+    <string name="view_all">View All</string>
+
+    <string name="find_doctors_by_specialty">Find Doctors by Specialty</string>
+    <string name="quick_services">Quick Services</string>
+
+    <string name="medicine_delivery">Medicine Delivery</string>
+    <string name="consult_doctor_online">Consult Doctor Online</string>
+
+    <string name="content_desc_profile_picture">User profile picture</string>
+    <string name="content_desc_medicine_delivery">delivering medicine</string>
+    <string name="content_desc_consult_doctor">Online doctor consult</string>
+
+    <string name="default_location">Location not found</string>
+
+    <string-array name="sort_options">
+        <item>Name</item>
+        <item>Rating</item>
+        <item>Distance</item>
+    </string-array>
+
+
+</resources>

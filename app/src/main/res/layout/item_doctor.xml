@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="12dp"
+    android:layout_marginBottom="12dp"
+    android:padding="12dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="6dp"
+    app:strokeWidth="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:gravity="center_vertical">
+
+        <!-- Profile image -->
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imageViewDoctor"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:src="@drawable/profile_lu"
+            android:layout_marginEnd="16dp"
+            app:civ_border_width="1dp"
+            app:civ_border_color="#CCCCCC"/>
+
+        <!-- Doctor Info -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dr. Priya Sharma"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/textViewSpecialty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cardiologist"
+                android:textSize="14sp"
+                android:textColor="@android:color/darker_gray"
+                android:layout_marginTop="2dp" />
+
+            <TextView
+                android:id="@+id/textViewClinic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Apollo Hospital, Chennai"
+                android:textSize="13sp"
+                android:visibility="visible"
+                android:textColor="@android:color/darker_gray"
+                android:layout_marginTop="2dp" />
+
+            <TextView
+                android:id="@+id/textViewExperience"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10 years experience"
+                android:textSize="13sp"
+                android:textColor="@android:color/darker_gray"
+                android:layout_marginTop="2dp" />
+
+            <!-- ✅ Fee -->
+            <TextView
+                android:id="@+id/textViewFee"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="₹ 500"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/holo_green_dark"
+                android:layout_marginTop="4dp" />
+
+            <!-- ✅ Book Button -->
+            <Button
+                android:id="@+id/btnBook"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Book"
+                android:textSize="14sp"
+                android:backgroundTint="@color/purple_500"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="6dp"/>
+        </LinearLayout>
+
+        <!-- Rating -->
+        <TextView
+            android:id="@+id/textViewRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4.9 ★"
+            android:textSize="12sp"
+            android:textColor="@android:color/white"
+            android:background="@drawable/rating_bg"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"
+            android:layout_marginStart="8dp"
+            android:layout_gravity="top"/>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

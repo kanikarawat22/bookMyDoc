@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <!--View
+        android:layout_width="0dp"
+        android:layout_height="220dp"
+        android:background="@color/shimmer_placeholder"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" /!-->
+
+    <View
+        android:id="@+id/placeholder_image"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/placeholder_circle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/placeholder_greeting"
+        android:layout_width="180dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="16dp"
+        android:background="@color/shimmer_placeholder"
+        app:layout_constraintStart_toEndOf="@id/placeholder_image"
+        app:layout_constraintTop_toTopOf="@id/placeholder_image" />
+
+    <View
+        android:id="@+id/placeholder_location"
+        android:layout_width="120dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/shimmer_placeholder"
+        app:layout_constraintStart_toStartOf="@id/placeholder_greeting"
+        app:layout_constraintTop_toBottomOf="@id/placeholder_greeting" />
+
+    <View
+        android:id="@+id/placeholder_search"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/placeholder_background_rounded"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/placeholder_image" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:orientation="vertical"
+        android:paddingHorizontal="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/placeholder_search">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:background="@drawable/placeholder_background_rounded" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:background="@drawable/placeholder_background_rounded" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/placeholder_background_rounded" />
+
+        <View
+            android:layout_width="220dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="32dp"
+            android:background="@color/shimmer_placeholder" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
+
+            <include layout="@layout/shimmer_placeholder_specialty_item" />
+            <include layout="@layout/shimmer_placeholder_specialty_item" />
+            <include layout="@layout/shimmer_placeholder_specialty_item" />
+            <include layout="@layout/shimmer_placeholder_specialty_item" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
+
+            <include layout="@layout/shimmer_placeholder_specialty_item" />
+            <include layout="@layout/shimmer_placeholder_specialty_item" />
+            <include layout="@layout/shimmer_placeholder_specialty_item" />
+            <include layout="@layout/shimmer_placeholder_specialty_item" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="150dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="24dp"
+            android:background="@color/shimmer_placeholder" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
+
+            <include layout="@layout/shimmer_placeholder_quick_service_item" />
+            <include layout="@layout/shimmer_placeholder_quick_service_item" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/categoryName"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Heart"
+    android:textColor="#000000"
+    android:textStyle="bold"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="8dp"
+    android:layout_marginEnd="8dp"
+    android:background="@drawable/category_selected_background" />

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/ic_home"
+        android:iconTint="@color/white"
+        android:title="Home" />
+
+    <item
+        android:id="@+id/nav_records"
+        android:icon="@drawable/ic_appointments"
+        android:iconTint="@color/white"
+        android:title="Records" />
+
+    <item
+        android:id="@+id/nav_demo"
+        android:icon="@drawable/ic_demo"
+        android:iconTint="@color/white"
+        android:title="Demo" />
+
+    <item
+        android:id="@+id/nav_contact"
+        android:icon="@drawable/ic_help"
+        android:iconTint="@color/white"
+        android:title="Help" />
+
+</menu>
