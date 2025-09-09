@@ -1,5 +1,6 @@
 package in.com.bookmydoc.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -50,7 +51,20 @@ public class HospitalDetailsActivity extends AppCompatActivity {
 
         // ✅ RecyclerView setup
         doctors = new ArrayList<>();
-        doctorAdapter = new DoctorAdapter(this, doctors);
+        doctorAdapter = new DoctorAdapter(this, doctors, doctor -> {
+            // Doctor pe click → DoctorDetailActivity kholna
+            Intent intent = new Intent(HospitalDetailsActivity.this, DoctorDetailActivity.class);
+            intent.putExtra("doctorId", doctor.getDocid());
+            intent.putExtra("name", doctor.getName());
+            intent.putExtra("specialty", doctor.getSpecialty());
+            intent.putExtra("hospital", doctor.getHospital());
+            intent.putExtra("experience", doctor.getExperience());
+            intent.putExtra("rating", doctor.getRating());
+            intent.putExtra("fee", doctor.getFee());
+            intent.putExtra("profileImageUrl", doctor.getProfileImageUrl());
+            startActivity(intent);
+        });
+
         docRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         docRecyclerView.setAdapter(doctorAdapter);
 

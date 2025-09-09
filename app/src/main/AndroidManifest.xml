@@ -65,7 +65,8 @@
 
         <activity
             android:name=".activities.DoctorDetailActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.BookMyDoc.Main" />
 
 
         <activity

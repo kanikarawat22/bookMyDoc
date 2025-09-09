@@ -7,6 +7,7 @@
     android:background="@android:color/white"
     tools:context=".fragments.HomeFragment">
 
+    <!-- Shimmer Placeholder -->
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/shimmer_container"
         android:layout_width="0dp"
@@ -16,11 +17,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
-
         <include layout="@layout/shimmer_placeholder_home" />
-
     </com.facebook.shimmer.ShimmerFrameLayout>
 
+    <!-- Main Content -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main_content_group"
         android:layout_width="match_parent"
@@ -28,23 +28,17 @@
         android:visibility="gone"
         tools:visibility="visible">
 
+        <!-- Header Background -->
         <View
             android:id="@+id/header_background"
             android:layout_width="0dp"
             android:layout_height="220dp"
             android:background="@color/light_blue_bg"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_location"
-            app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/scr_bg1"/>
-
+        <!-- Top Profile Image -->
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_image"
             android:layout_width="70dp"
@@ -55,6 +49,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <!-- Greeting Text -->
         <TextView
             android:id="@+id/tv_greeting"
             android:layout_width="0dp"
@@ -65,27 +60,28 @@
             android:textColor="@color/dark_blue_text"
             android:textSize="28sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/tv_location"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/profile_image"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/profile_image"
+            app:layout_constraintBottom_toTopOf="@id/tv_location"
             app:layout_constraintVertical_chainStyle="packed" />
 
+        <!-- Location Text -->
         <TextView
             android:id="@+id/tv_location"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:drawablePadding="3dp"
-            android:layout_marginStart="10dp"
             android:text="Loading location..."
             android:textColor="@color/secondary_text"
             android:textSize="16sp"
+            android:drawablePadding="3dp"
             app:drawableStartCompat="@drawable/ic_location_blu"
-            app:layout_constraintBottom_toBottomOf="@id/profile_image"
-            app:layout_constraintEnd_toEndOf="@id/tv_greeting"
             app:layout_constraintStart_toEndOf="@id/profile_image"
-            app:layout_constraintTop_toBottomOf="@id/tv_greeting" />
+            app:layout_constraintEnd_toEndOf="@id/tv_greeting"
+            app:layout_constraintTop_toBottomOf="@id/tv_greeting"
+            app:layout_constraintBottom_toBottomOf="@id/profile_image" />
 
+        <!-- Search Bar -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/search_bar_card"
             android:layout_width="0dp"
@@ -95,15 +91,15 @@
             app:cardCornerRadius="28dp"
             app:cardElevation="8dp"
             app:cardBackgroundColor="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/profile_image"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/profile_image">
+            app:layout_constraintEnd_toEndOf="parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
                 android:orientation="horizontal"
+                android:gravity="center_vertical"
                 android:paddingHorizontal="16dp"
                 android:paddingVertical="14dp">
 
@@ -112,9 +108,8 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_search"
                     app:tint="@color/secondary_text" />
-
-                <EditText
-                    android:id="@+id/editTextSearch"
+                <AutoCompleteTextView
+                    android:id="@+id/autoCompleteSearch"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
@@ -123,39 +118,43 @@
                     android:hint="Search for doctors or specialties..."
                     android:imeOptions="actionSearch"
                     android:inputType="text"
-                    android:textColor="@color/secondary_text" />
+                    android:textColor="@color/secondary_text"
+                    android:dropDownHeight="200dp"
+                    android:dropDownVerticalOffset="5dp"
+                    android:dropDownWidth="match_parent"
+                    android:completionThreshold="1"/>
+
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-
+        <!-- Content Scroll -->
         <androidx.core.widget.NestedScrollView
             android:id="@+id/content_container"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="16dp"
             android:fillViewport="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/search_bar_card"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/search_bar_card">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:paddingBottom="32dp">
+                android:paddingBottom="32dp"
+                android:background="@color/white">
 
-
-
+                <!-- Actions: Book & Call -->
                 <LinearLayout
                     android:id="@+id/actions_container"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:orientation="horizontal"
                     android:layout_marginHorizontal="24dp"
                     android:layout_marginTop="8dp"
-                    android:orientation="horizontal"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <com.google.android.material.button.MaterialButton
@@ -163,39 +162,40 @@
                         style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        app:icon="@drawable/ic_calendar"
                         android:layout_weight="1"
-                        android:backgroundTint="@color/primary"
-                        android:paddingVertical="12dp"
                         android:text="Book \nAppointment"
                         android:textAllCaps="false"
-                        app:cornerRadius="16dp" />
+                        android:paddingVertical="12dp"
+                        app:cornerRadius="16dp"
+                        app:icon="@drawable/ic_calendar"
+                        android:backgroundTint="@color/primary" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_call_hospital"
                         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        app:icon="@drawable/ic_call"
                         android:layout_weight="1"
-                        android:paddingVertical="12dp"
-                        android:backgroundTint="@color/white"
+                        android:layout_marginStart="16dp"
                         android:text="Call and \nBook"
                         android:textAllCaps="false"
-                        android:textColor="@color/primary"
+                        android:paddingVertical="12dp"
                         app:cornerRadius="16dp"
-                        app:strokeColor="@color/primary" />
+                        app:strokeColor="@color/primary"
+                        android:textColor="@color/primary"
+                        android:backgroundTint="@color/white"
+                        app:icon="@drawable/ic_call" />
                 </LinearLayout>
 
+                <!-- Promo Banner -->
                 <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/viewPagerPromoBanner"
                     android:layout_width="0dp"
                     android:layout_height="160dp"
                     android:layout_marginTop="24dp"
                     android:visibility="gone"
-                    app:layout_constraintEnd_toEndOf="@id/actions_container"
                     app:layout_constraintStart_toStartOf="@id/actions_container"
+                    app:layout_constraintEnd_toEndOf="@id/actions_container"
                     app:layout_constraintTop_toBottomOf="@id/actions_container" />
 
                 <com.google.android.material.tabs.TabLayout
@@ -203,40 +203,66 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:background="@android:color/transparent"
-                    app:layout_constraintEnd_toEndOf="@id/viewPagerPromoBanner"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="@id/viewPagerPromoBanner"
+                    app:layout_constraintEnd_toEndOf="@id/viewPagerPromoBanner"
                     app:layout_constraintTop_toBottomOf="@id/viewPagerPromoBanner"
                     app:tabBackground="@drawable/tab_selector"
                     app:tabGravity="center"
-                    app:tabIndicatorHeight="0dp"
-                    android:visibility="gone"/>
+                    app:tabIndicatorHeight="0dp" />
 
+                <!-- Specialty Section -->
                 <TextView
                     android:id="@+id/tv_specialty_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
                     android:text="Find Doctors by Specialty"
                     android:textColor="@color/dark_blue_text"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="@id/actions_container"
-                    app:layout_constraintTop_toBottomOf="@id/tabLayoutIndicator" />
+                    android:layout_marginTop="24dp"
+                    app:layout_constraintTop_toBottomOf="@id/tabLayoutIndicator"
+                    app:layout_constraintStart_toStartOf="@id/actions_container" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_view_search_suggestions"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:layout_marginTop="8dp"
+                    android:padding="8dp"
+                    app:layout_constraintTop_toBottomOf="@id/search_bar_card"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tvSearchNoData"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="No results found"
+                    android:textSize="16sp"
+                    android:textColor="@color/secondary_text"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toBottomOf="@id/recycler_view_search_suggestions"
+                    app:layout_constraintStart_toStartOf="@id/recycler_view_search_suggestions"
+                    app:layout_constraintEnd_toEndOf="@id/recycler_view_search_suggestions"/>
+
 
                 <TextView
                     android:id="@+id/textViewViewAll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackground"
+                    android:text="@string/view_all"
+                    android:textSize="16sp"
+                    android:textColor="?attr/colorPrimary"
+                    android:paddingHorizontal="8dp"
+                    android:gravity="center_vertical"
+                    android:minHeight="48dp"
                     android:clickable="true"
                     android:focusable="true"
-                    android:minHeight="48dp"
-                    android:gravity="center_vertical"
-                    android:paddingHorizontal="8dp"
-                    android:text="@string/view_all"
-                    android:textColor="?attr/colorPrimary"
-                    android:textSize="16sp"
+                    android:background="?attr/selectableItemBackground"
                     app:layout_constraintBaseline_toBaselineOf="@id/tv_specialty_title"
                     app:layout_constraintEnd_toEndOf="@id/actions_container" />
 
@@ -244,24 +270,39 @@
                     android:id="@+id/recycler_view_specialty"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/recyler_view_bg"
                     android:layout_marginTop="16dp"
                     android:padding="8dp"
-                    app:layout_constraintEnd_toEndOf="@id/actions_container"
+                    android:background="@drawable/recyler_view_bg"
+                    app:layout_constraintTop_toBottomOf="@id/tv_specialty_title"
                     app:layout_constraintStart_toStartOf="@id/actions_container"
-                    app:layout_constraintTop_toBottomOf="@id/tv_specialty_title" />
+                    app:layout_constraintEnd_toEndOf="@id/actions_container" />
 
+                <TextView
+                    android:id="@+id/tvNoData"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="No data found"
+                    android:textSize="16sp"
+                    android:textColor="@color/secondary_text"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toBottomOf="@id/recycler_view_specialty"
+                    app:layout_constraintStart_toStartOf="@id/recycler_view_specialty"
+                    app:layout_constraintEnd_toEndOf="@id/recycler_view_specialty" />
+
+                <!-- Quick Services -->
                 <TextView
                     android:id="@+id/textViewQuickServices"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
                     android:text="Quick Services"
                     android:textColor="@color/dark_blue_text"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="@id/actions_container"
-                    app:layout_constraintTop_toBottomOf="@id/recycler_view_specialty" />
+                    android:layout_marginTop="24dp"
+                    app:layout_constraintTop_toBottomOf="@id/recycler_view_specialty"
+                    app:layout_constraintStart_toStartOf="@id/actions_container" />
 
                 <HorizontalScrollView
                     android:id="@+id/horizontalScrollView"
@@ -270,24 +311,25 @@
                     android:layout_marginTop="8dp"
                     android:scrollbars="none"
                     android:padding="8dp"
-                    app:layout_constraintEnd_toEndOf="@id/actions_container"
+                    app:layout_constraintTop_toBottomOf="@id/textViewQuickServices"
                     app:layout_constraintStart_toStartOf="@id/actions_container"
-                    app:layout_constraintTop_toBottomOf="@id/textViewQuickServices">
+                    app:layout_constraintEnd_toEndOf="@id/actions_container">
 
                     <LinearLayout
                         android:id="@+id/quickServicesContainer"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="4dp"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:padding="4dp">
 
+                        <!-- Medicine Delivery Card -->
                         <androidx.cardview.widget.CardView
                             android:id="@+id/cardMedicineDelivery"
                             android:layout_width="160dp"
                             android:layout_height="wrap_content"
                             app:cardCornerRadius="12dp"
-                            app:cardBackgroundColor="@color/light_gray_chip"
-                            app:cardElevation="4dp">
+                            app:cardElevation="4dp"
+                            app:cardBackgroundColor="@color/light_gray_chip">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -313,14 +355,15 @@
                             </LinearLayout>
                         </androidx.cardview.widget.CardView>
 
+                        <!-- Virtual Appointment Card -->
                         <androidx.cardview.widget.CardView
                             android:id="@+id/cardVirtualAppointment"
                             android:layout_width="160dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
                             app:cardCornerRadius="12dp"
-                            app:cardBackgroundColor="@color/light_gray_chip"
-                            app:cardElevation="4dp">
+                            app:cardElevation="4dp"
+                            app:cardBackgroundColor="@color/light_gray_chip">
 
                             <LinearLayout
                                 android:layout_width="match_parent"

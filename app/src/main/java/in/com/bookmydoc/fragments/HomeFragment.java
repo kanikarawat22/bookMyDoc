@@ -9,10 +9,14 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,14 +29,13 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
 import com.facebook.shimmer.ShimmerFrameLayout;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -57,50 +60,68 @@ import in.com.bookmydoc.activities.SelectHospitalActivity;
 import in.com.bookmydoc.activities.SpecialtyActivity;
 import in.com.bookmydoc.adapter.PromoBannerAdapter;
 import in.com.bookmydoc.adapter.SpecialtyAdapter;
+import in.com.bookmydoc.adapter.DoctorAdapter;
 import in.com.bookmydoc.manager.EncryptionManager;
 import in.com.bookmydoc.model.Specialty;
+import in.com.bookmydoc.model.Doctor;
 
 public class HomeFragment extends Fragment {
 
     private static final String TAG = "HomeFragment";
 
     // --- MEMBER VARIABLES ---
-    private TextView textViewLocation, textViewAll, textViewUserName;
+    private TextView textViewLocation, textViewAll, textViewUserName, tvNoData;
     private CircleImageView profileImageView;
     private ViewPager2 viewPagerPromoBanner;
     private ShimmerFrameLayout shimmerContainer;
     private ConstraintLayout contentContainer;
-    private EditText editTextSearch;
+    private AutoCompleteTextView autoCompleteSearch;
     private MaterialButton buttonCall, buttonBook;
     private TabLayout tabLayoutIndicator;
     private RecyclerView recyclerViewSpecialty;
     private SpecialtyAdapter specialtyAdapter;
     private List<Specialty> specialtyList;
-    private LottieAnimationView medicineDeliveryAnimation;
-    private LottieAnimationView virtualAppointmentAnimation;
+    private LottieAnimationView medicineDeliveryAnimation, virtualAppointmentAnimation;
 
-    private FusedLocationProviderClient fusedLocationProviderClient;
-    private ActivityResultLauncher<String[]> locationPermissionLauncher;
+    // Search-suggestions UI
+    private RecyclerView recyclerViewSearchSuggestions;
+    private DoctorAdapter doctorAdapter;
+    private List<Doctor> doctorList;
+    private TextView tvSearchNoData; // small "no match" inside dropdown
+
     private FirebaseFirestore firestore;
     private EncryptionManager encryptionManager;
+    private ActivityResultLauncher<String[]> locationPermissionLauncher;
+    private com.google.android.gms.location.FusedLocationProviderClient fusedLocationProviderClient;
+
     private final Handler sliderHandler = new Handler(Looper.getMainLooper());
 
+    private final Runnable sliderRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (viewPagerPromoBanner != null && viewPagerPromoBanner.getAdapter() != null) {
+                int currentItem = viewPagerPromoBanner.getCurrentItem();
+                int totalItems = viewPagerPromoBanner.getAdapter().getItemCount();
+                if (totalItems > 0) {
+                    viewPagerPromoBanner.setCurrentItem((currentItem + 1) % totalItems, true);
+                }
+            }
+        }
+    };
 
-    public HomeFragment() {
-        // Required empty public constructor
-    }
+    public HomeFragment() { }
 
     // --- FRAGMENT LIFECYCLE ---
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         firestore = FirebaseFirestore.getInstance();
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity());
+        fusedLocationProviderClient = com.google.android.gms.location.LocationServices.getFusedLocationProviderClient(requireActivity());
 
         try {
             encryptionManager = new EncryptionManager();
         } catch (Exception e) {
-            Log.e(TAG, "EncryptionManager initialization failed", e);
+            Log.e(TAG, "EncryptionManager init failed", e);
             Toast.makeText(getContext(), "Security module failed to load.", Toast.LENGTH_SHORT).show();
         }
 
@@ -112,9 +133,7 @@ public class HomeFragment extends Fragment {
                         fetchLastLocation();
                     } else {
                         Toast.makeText(getContext(), "Location permission denied", Toast.LENGTH_SHORT).show();
-                        if (textViewLocation != null) {
-                            textViewLocation.setText(R.string.default_location);
-                        }
+                        if (textViewLocation != null) textViewLocation.setText(R.string.default_location);
                     }
                 });
     }
@@ -130,17 +149,20 @@ public class HomeFragment extends Fragment {
         bindViews(view);
         setupPromoBanner();
         setupRecyclerView();
+        setupSearchSuggestionsRecycler();
         setupClickListeners();
+        setupSearch(); // search controls suggestion dropdown only
         showShimmer(true);
         loadData();
     }
 
-    // --- SETUP ---
     private void bindViews(View view) {
         shimmerContainer = view.findViewById(R.id.shimmer_container);
         contentContainer = view.findViewById(R.id.main_content_group);
         recyclerViewSpecialty = view.findViewById(R.id.recycler_view_specialty);
-        editTextSearch = view.findViewById(R.id.editTextSearch);
+        autoCompleteSearch = view.findViewById(R.id.autoCompleteSearch);
+        recyclerViewSearchSuggestions = view.findViewById(R.id.recycler_view_search_suggestions);
+        tvSearchNoData = view.findViewById(R.id.tvSearchNoData);
         buttonCall = view.findViewById(R.id.btn_call_hospital);
         buttonBook = view.findViewById(R.id.btn_book_appointment);
         textViewLocation = view.findViewById(R.id.tv_location);
@@ -151,6 +173,7 @@ public class HomeFragment extends Fragment {
         tabLayoutIndicator = view.findViewById(R.id.tabLayoutIndicator);
         profileImageView = view.findViewById(R.id.profile_image);
         textViewUserName = view.findViewById(R.id.tv_greeting);
+        tvNoData = view.findViewById(R.id.tvNoData);
     }
 
     private void setupRecyclerView() {
@@ -163,6 +186,72 @@ public class HomeFragment extends Fragment {
         });
         recyclerViewSpecialty.setAdapter(specialtyAdapter);
     }
+
+    private void setupSearchSuggestionsRecycler() {
+        doctorList = new ArrayList<>();
+        doctorAdapter = new DoctorAdapter(requireContext(), doctorList, doctor -> {
+            // clicked a doctor from suggestions -> open doctor details (change activity if needed)
+            Intent intent = new Intent(requireContext(), ConsultDoctorActivity.class);
+            intent.putExtra("doctor_id", doctor.getDocid());
+            startActivity(intent);
+            // hide suggestions after click
+            recyclerViewSearchSuggestions.setVisibility(View.GONE);
+        });
+
+        recyclerViewSearchSuggestions.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerViewSearchSuggestions.setAdapter(doctorAdapter);
+
+        // start hidden
+        recyclerViewSearchSuggestions.setVisibility(View.GONE);
+        tvSearchNoData.setVisibility(View.GONE);
+    }
+
+    private void setupSearch() {
+        if (doctorList == null || doctorList.isEmpty()) return;
+
+        // map doctor names with hospital for dropdown
+        List<String> doctorNamesForDropdown = new ArrayList<>();
+        for (Doctor d : doctorList) {
+            doctorNamesForDropdown.add(d.getName() + " - " + d.getHospital());
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_dropdown_item_1line,
+                doctorNamesForDropdown
+        );
+
+        autoCompleteSearch.setAdapter(adapter);
+        autoCompleteSearch.setThreshold(1);
+
+        autoCompleteSearch.setOnItemClickListener((parent, view, position, id) -> {
+            String selectedText = parent.getItemAtPosition(position).toString();
+
+            // get doctor name from dropdown
+            String selectedName = selectedText.split(" - ")[0].trim();
+
+            // filter RecyclerView
+            List<Doctor> filteredList = new ArrayList<>();
+            for (Doctor d : doctorList) {
+                if (d.getName().equalsIgnoreCase(selectedName)) {
+                    filteredList.add(d);
+                }
+            }
+
+            doctorAdapter.updateList(filteredList);
+
+            if (filteredList.isEmpty()) {
+                recyclerViewSearchSuggestions.setVisibility(View.GONE);
+                tvSearchNoData.setVisibility(View.VISIBLE);
+            } else {
+                recyclerViewSearchSuggestions.setVisibility(View.VISIBLE);
+                tvSearchNoData.setVisibility(View.GONE);
+            }
+        });
+    }
+
+
+
 
     private void setupClickListeners() {
         buttonCall.setOnClickListener(v -> startActivity(new Intent(requireContext(), CallActivity.class)));
@@ -186,8 +275,7 @@ public class HomeFragment extends Fragment {
         new TabLayoutMediator(tabLayoutIndicator, viewPagerPromoBanner, (tab, position) -> {}).attach();
 
         viewPagerPromoBanner.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
+            @Override public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 sliderHandler.removeCallbacks(sliderRunnable);
                 sliderHandler.postDelayed(sliderRunnable, 3000);
@@ -201,35 +289,81 @@ public class HomeFragment extends Fragment {
         setupLottieAnimations();
         checkAndRequestLocationPermission();
         fetchSpecialtiesFromFirestore();
+        fetchDoctorsFromFirestore(); // load doctors for search suggestions
     }
 
+    private void fetchDoctorsFromFirestore() {
+        firestore.collection("Doctors").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                List<Doctor> tmp = new ArrayList<>();
+                for (QueryDocumentSnapshot doc : task.getResult()) {
+                    Doctor d = doc.toObject(Doctor.class);
+                    if (d.getDocid() == null || d.getDocid().isEmpty())
+                        d.setDocid(doc.getId());
+                    tmp.add(d);
+                }
+                doctorList.clear();
+                doctorList.addAll(tmp);
+                doctorAdapter.updateList(tmp);
+
+                // ✅ Abhi yahan se hi call karo
+                setupSearch();
+            } else {
+                Log.w(TAG, "Failed to fetch doctors for search suggestions");
+            }
+        });
+    }
+
+
+    private void fetchSpecialtiesFromFirestore() {
+        firestore.collection("Specialties").orderBy("id").limit(12).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                List<Specialty> tempList = new ArrayList<>();
+                for (QueryDocumentSnapshot doc : task.getResult()) {
+                    Specialty specialty = doc.toObject(Specialty.class);
+                    tempList.add(specialty);
+                }
+                specialtyList.clear();
+                specialtyList.addAll(tempList);
+                specialtyAdapter.updateData(tempList);
+
+                if (tempList.isEmpty()) {
+                    recyclerViewSpecialty.setVisibility(View.GONE);
+                    tvNoData.setVisibility(View.VISIBLE);
+                } else {
+                    recyclerViewSpecialty.setVisibility(View.VISIBLE);
+                    tvNoData.setVisibility(View.GONE);
+                }
+            } else {
+                Toast.makeText(getContext(), "Failed to load specialties", Toast.LENGTH_SHORT).show();
+                recyclerViewSpecialty.setVisibility(View.GONE);
+                tvNoData.setVisibility(View.VISIBLE);
+            }
+            showShimmer(false);
+        });
+    }
+
+    // --- OTHER HELPERS (unchanged) ---
     private void fetchUserProfile() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null && encryptionManager != null) {
             String uid = currentUser.getUid();
             DocumentReference userDocRef = firestore.collection("users").document(uid);
-
             userDocRef.get().addOnSuccessListener(documentSnapshot -> {
                 if (documentSnapshot != null && documentSnapshot.exists()) {
                     String encryptedName = documentSnapshot.getString("fullName");
                     String imageUrl = documentSnapshot.getString("profileImage");
-
                     if (encryptedName != null) {
                         try {
                             String decryptedName = encryptionManager.decrypt(encryptedName);
-                            textViewUserName.setText(String.format("Hi, %s", decryptedName.split(" ")[0])); // Show first name
+                            textViewUserName.setText(String.format("Hi, %s", decryptedName.split(" ")[0]));
                         } catch (Exception e) {
                             textViewUserName.setText("Hi, User");
                             Log.e(TAG, "Failed to decrypt name", e);
                         }
                     }
-
                     if (imageUrl != null && !imageUrl.equals("default") && getContext() != null) {
-                        Glide.with(getContext())
-                                .load(imageUrl)
-                                .placeholder(R.drawable.profile_lu)
-                                .error(R.drawable.profile_lu)
-                                .into(profileImageView);
+                        Glide.with(getContext()).load(imageUrl).placeholder(R.drawable.profile_lu).error(R.drawable.profile_lu).into(profileImageView);
                     }
                 }
             }).addOnFailureListener(e -> Log.e(TAG, "Error fetching user profile", e));
@@ -252,11 +386,8 @@ public class HomeFragment extends Fragment {
     private void fetchLastLocation() {
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) return;
         fusedLocationProviderClient.getLastLocation().addOnSuccessListener(requireActivity(), location -> {
-            if (location != null) {
-                reverseGeocodeLocation(location);
-            } else {
-                textViewLocation.setText(R.string.default_location);
-            }
+            if (location != null) reverseGeocodeLocation(location);
+            else textViewLocation.setText(R.string.default_location);
         });
     }
 
@@ -277,36 +408,6 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void fetchSpecialtiesFromFirestore() {
-        firestore.collection("Specialties").orderBy("id").limit(12).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful() && task.getResult() != null) {
-                specialtyList.clear();
-                for (QueryDocumentSnapshot doc : task.getResult()) {
-                    Specialty specialty = doc.toObject(Specialty.class);
-                    specialtyList.add(specialty);
-                }
-                specialtyAdapter.notifyDataSetChanged();
-            } else {
-                Toast.makeText(getContext(), "Failed to load specialties", Toast.LENGTH_SHORT).show();
-            }
-            showShimmer(false);
-        });
-    }
-
-    // --- UI AND LIFECYCLE MANAGEMENT ---
-    private final Runnable sliderRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (viewPagerPromoBanner.getAdapter() != null) {
-                int currentItem = viewPagerPromoBanner.getCurrentItem();
-                int totalItems = viewPagerPromoBanner.getAdapter().getItemCount();
-                if (totalItems > 0) {
-                    viewPagerPromoBanner.setCurrentItem((currentItem + 1) % totalItems, true);
-                }
-            }
-        }
-    };
-
     private void showShimmer(boolean show) {
         if (show) {
             shimmerContainer.startShimmer();
@@ -322,17 +423,13 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (shimmerContainer.isShimmerVisible()) {
-            shimmerContainer.startShimmer();
-        }
+        shimmerContainer.startShimmer();
         sliderHandler.postDelayed(sliderRunnable, 3000);
     }
 
     @Override
     public void onPause() {
-        if(shimmerContainer.isShimmerStarted()){
-            shimmerContainer.stopShimmer();
-        }
+        shimmerContainer.stopShimmer();
         super.onPause();
         sliderHandler.removeCallbacks(sliderRunnable);
     }

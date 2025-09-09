@@ -27,13 +27,19 @@ public class DoctorAdapter extends RecyclerView.Adapter<DoctorAdapter.DoctorView
 
     private Context context;
     private List<Doctor> doctorList;
-    private List<Doctor> fullList; // ✅ For search & filter
+    private List<Doctor> fullList;
+    private OnItemClickListener listener;
+    public interface OnItemClickListener {
+        void onItemClick(Doctor doctor);
+    }// ✅ For search & filter
 
-    public DoctorAdapter(Context context, List<Doctor> doctorList) {
+    public DoctorAdapter(Context context, List<Doctor> doctorList, OnItemClickListener listener) {
         this.context = context;
         this.doctorList = doctorList;
-        this.fullList = new ArrayList<>(doctorList); // copy for filtering
+        this.fullList = new ArrayList<>(doctorList);
+        this.listener = listener; // ✅ correctly assigned
     }
+
 
     @NonNull
     @Override
@@ -52,6 +58,13 @@ public class DoctorAdapter extends RecyclerView.Adapter<DoctorAdapter.DoctorView
         holder.textViewExperience.setText(doctor.getExperience());
         holder.textViewRating.setText(String.format("%.1f ★", doctor.getRating()));
         holder.textViewFee.setText("₹ " + doctor.getFee());
+
+
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onItemClick(doctor);
+            }
+        });
 
         // Load profile image using Glide
         Glide.with(context)

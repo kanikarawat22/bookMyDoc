@@ -9,6 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide; // For loading images from a URL
+
+import java.util.ArrayList;
 import java.util.List;
 import in.com.bookmydoc.R;
 import in.com.bookmydoc.model.Specialty;
@@ -17,6 +19,7 @@ public class SpecialtyAdapter extends RecyclerView.Adapter<SpecialtyAdapter.Spec
 
     private final Context context;
     private final List<Specialty> specialtyList;
+    private final List<Specialty> specialtyListFull;
     private final OnSpecialtyClickListener listener;
 
     public interface OnSpecialtyClickListener {
@@ -26,6 +29,7 @@ public class SpecialtyAdapter extends RecyclerView.Adapter<SpecialtyAdapter.Spec
     public SpecialtyAdapter(Context context, List<Specialty> specialtyList, OnSpecialtyClickListener listener) {
         this.context = context;
         this.specialtyList = specialtyList;
+        this.specialtyListFull = new ArrayList<>(specialtyList);
         this.listener = listener;
     }
 
@@ -47,6 +51,32 @@ public class SpecialtyAdapter extends RecyclerView.Adapter<SpecialtyAdapter.Spec
         return specialtyList.size();
     }
 
+    public void filter(String query) {
+        specialtyList.clear();
+        if (query == null || query.trim().isEmpty()) {
+            specialtyList.addAll(specialtyListFull);
+        } else {
+            String lowerCaseQuery = query.toLowerCase();
+            for (Specialty item : specialtyListFull) {
+                if (item.getName() != null && item.getName().toLowerCase().contains(lowerCaseQuery)) {
+                    specialtyList.add(item);
+                }
+            }
+        }
+        notifyDataSetChanged();
+    }
+
+    public boolean isEmpty() {
+        return specialtyList.isEmpty();
+    }
+
+    public void updateData(List<Specialty> newList) {
+        specialtyList.clear();
+        specialtyList.addAll(newList);
+        specialtyListFull.clear();
+        specialtyListFull.addAll(newList);
+        notifyDataSetChanged();
+    }
     static class SpecialtyViewHolder extends RecyclerView.ViewHolder {
         ImageView specialtyIcon;
         TextView specialtyName;

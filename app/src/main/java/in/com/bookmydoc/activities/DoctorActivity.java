@@ -1,5 +1,6 @@
 package in.com.bookmydoc.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -33,7 +34,20 @@ public class DoctorActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         doctorList = new ArrayList<>();
-        doctorAdapter = new DoctorAdapter(this, doctorList);
+        doctorAdapter = new DoctorAdapter(this, doctorList, doctor -> {
+            // Doctor pe click → DoctorDetailActivity kholna
+            Intent intent = new Intent(DoctorActivity.this, DoctorDetailActivity.class);
+            intent.putExtra("doctorId", doctor.getDocid());
+            intent.putExtra("name", doctor.getName());
+            intent.putExtra("specialty", doctor.getSpecialty());
+            intent.putExtra("hospital", doctor.getHospital());
+            intent.putExtra("experience", doctor.getExperience());
+            intent.putExtra("rating", doctor.getRating());
+            intent.putExtra("fee", doctor.getFee());
+            intent.putExtra("profileImageUrl", doctor.getProfileImageUrl());
+            startActivity(intent);
+        });
+
         recyclerView.setAdapter(doctorAdapter);
 
         db = FirebaseFirestore.getInstance();

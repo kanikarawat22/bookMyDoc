@@ -2,6 +2,7 @@ package in.com.bookmydoc.activities;
 
 import in.com.bookmydoc.R;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -55,7 +56,20 @@ public class SelectDocActivity extends AppCompatActivity {
         tvEmpty = findViewById(R.id.tvEmpty);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new DoctorAdapter(this, doctorList);
+        adapter = new DoctorAdapter(this, doctorList, doctor -> {
+            // Doctor click → DoctorDetailActivity open
+            Intent intent = new Intent(SelectDocActivity.this, DoctorDetailActivity.class);
+            intent.putExtra("doctorId", doctor.getDocid());
+            intent.putExtra("name", doctor.getName());
+            intent.putExtra("specialty", doctor.getSpecialty());
+            intent.putExtra("hospital", doctor.getHospital());
+            intent.putExtra("experience", doctor.getExperience());
+            intent.putExtra("rating", doctor.getRating());
+            intent.putExtra("fee", doctor.getFee());
+            intent.putExtra("profileImageUrl", doctor.getProfileImageUrl());
+            startActivity(intent);
+        });
+
         recyclerView.setAdapter(adapter);
 
         // Firestore init
